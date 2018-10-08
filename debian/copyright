@@ -1,6 +1,6 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: dcc-cyrus
-Source: http://oss.sft.ru:1080/dcc/dcc-cyrus.git
+Upstream-Name: oui-tool
+Source: http://oss.sft.ru:1080/dcc/oui-tool.git
 
 Files: *
 Copyright: Copyright 2017 Vitaly Protsko <villy@sft.ru>

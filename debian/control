@@ -1,4 +1,4 @@
-Source: dcc-cyrus
+Source: oui-tool
 Section: admin
 Priority: optional
 Maintainer: Vitaly Protsko (SFT-Service) <villy@sft.ru>
@@ -8,9 +8,21 @@ Vcs-Browser: http://oss.sft.ru:1080/dcc/dcc-cyrus/
 Vcs-Git: http://oss.sft.ru:1080/dcc/dcc-cyrus.git
 Homepage: http://oss.sft.ru:1080/dcc/dcc-cyrus/
 
-Package: dcc-cyrus
+Package: oui-tool
 Architecture: all
-Depends: ${shlibs:Depends}
-Description: Template files for "debianized" source
-  This is not really program, nor package. This is template (or
-  common files) for creating .deb packages from source code.
+Depends: ${shlibs:Depends}, bash
+Description: IEEE OUI data updater and search tool
+  Package contains update tool and search tool for
+  companys MAC addresses space. Updaes are got from
+  known IEEE source.
+  Update tool, beside simple storing OUI database,
+  generates updated DBs for the following tools:
+  - nmap
+  - arp-scan
+  - golismero
+  - btscanner
+  - arpwatch
+  - arpalert
+  - bluelog
+  - unicorn
+  if they are installed in system
