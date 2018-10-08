@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+
+_prev=initial
+_pack=$(cat debian/control | grep '^Package: ' | sed 's/^Package: //')
+_tmpf="$(mktemp)"
+
+echo -n > debian/changelog
+
+git tag -l v\* | sort -V | while read tag; do
+  (echo -e "$_pack (${tag#v}) stable; urgency=low\n"; git log --no-merges --pretty=format:'  * %s' $_prev..$tag; git log -1 --pretty='format:%n%n -- %aN <%aE>  %aD%n%n' $tag^..$tag) > $_tmpf
+  cat debian/changelog >> $_tmpf
+  cat $_tmpf > debian/changelog
+  _prev=$tag
+done
+
+mark="$(git log -1 --pretty=format:'%at')"
+mark="$(date --date=@$mark +%y%m%d%H%M%S)"
+tag="$(git tag -l v\* | sort -V | tail -n 1)"
+if [ "$(git log --exit-code $tag..HEAD | wc -l)" -ne 0 ]; then
+  echo -e "$_pack (${tag#v}-$mark) unstable; urgency=low\n" >> debian/changelog
+  git log --pretty=format:'  * %s' $tag..HEAD >> debian/changelog
+  git log -1 --pretty=format:'%n%n -- %aN <%aE>  %aD%n' >> debian/changelog
+fi
+
+# EOF update.debian

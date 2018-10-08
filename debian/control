@@ -1,0 +1,16 @@
+Source: dcc-cyrus
+Section: admin
+Priority: optional
+Maintainer: Vitaly Protsko (SFT-Service) <villy@sft.ru>
+Standards-Version: 3.9.7
+Build-Depends: debhelper (>= 7)
+Vcs-Browser: http://oss.sft.ru:1080/dcc/dcc-cyrus/
+Vcs-Git: http://oss.sft.ru:1080/dcc/dcc-cyrus.git
+Homepage: http://oss.sft.ru:1080/dcc/dcc-cyrus/
+
+Package: dcc-cyrus
+Architecture: all
+Depends: ${shlibs:Depends}
+Description: Template files for "debianized" source
+  This is not really program, nor package. This is template (or
+  common files) for creating .deb packages from source code.

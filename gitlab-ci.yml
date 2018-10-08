@@ -1,0 +1,29 @@
+# before all scripts
+before_script:
+  - source /etc/profile
+  
+# package stages
+stages:
+  - build
+  - deploy
+
+run-build:
+  stage: build
+  script:
+    - $CI_PROJECT_DIR/update.debian
+    - debuild binary-indep
+    - mkdir build
+    - mv ../dcc-cyrus_*.deb build/
+
+  artifacts:
+    paths:
+      - build/*
+
+run-publishdeb:
+  stage: deploy
+
+  only:
+    - dotdeb
+
+  script:
+    - $CI_PROJECT_DIR/publish.sh
