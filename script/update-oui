@@ -1,0 +1,149 @@
+#!/bin/bash
+#
+
+_pathData=${DIR_IEEEDATA:-/usr/share/ieee-data}
+
+_path1=${DIR_DB_ARPSCAN:-/usr/share/arp-scan}
+_path2=${DIR_DB_GOLISMERO:-/usr/share/golismero}
+_path3=${DIR_DB_NMAP:-/usr/share/nmap}
+_path4=${DIR_DB_BTSCANNER:-/usr/share/btscanner}
+_path5=${DIR_DB_ARPWATCH:-/usr/share/arpwatch}
+_path6=${DIR_DB_ARPALERT:-/etc/arpalert}
+_path7=${DIR_DB_BLUELOG:-/usr/share/bluelog}
+_path8=${DIR_DB_UNICORN:-/etc/unicornscan}
+
+_pathTmp=/var/tmp
+if [ ! -d $_pathTmp ]; then
+  _pathTmp=${TMPDIR}
+fi
+
+if [ -d $_path1 ] ; then
+  _fMACman=1
+  _fMACaddr=1
+  _fMACpfx=1
+  _fIABaddr=1
+fi
+if [ -d $_path3 ] || [ -d $_path4 ]; then
+  _fMACman=1
+  _fMACaddr=1
+  _fMACpfx=1
+fi
+if [ -d $_path5 ] || [ -d $_path7 ]; then
+  _fMACman=1
+  _fMACaddr=1
+  _fMACcase=1
+fi
+if [ -d $_path8 ] ; then
+  _fMACman=1
+  _fMACaddr=1
+  _fMAChyp=1
+fi
+
+if [ ! -d $_pathData ]; then
+  mkdir $_pathData
+fi
+
+cd $_pathTmp
+
+wget -O oui.txt.tmp http://standards-oui.ieee.org/oui.txt
+if [ ! -s oui.txt.tmp ]; then
+  echo "Unable to download OUI data from ieee.org, exiting"
+  exit 1
+fi
+mv -f oui.txt.tmp $_pathData/oui.txt
+
+wget -O iab.txt.tmp http://standards-oui.ieee.org/iab/iab.txt
+if [ ! -s iab.txt.tmp ]; then
+  echo "Unable to download IAB data from ieee.org, exiting"
+  exit 1
+fi
+mv -f iab.txt.tmp $_pathData/iab.txt
+
+if [ -n "$_fMACman" ]; then
+  cat $_pathData/oui.txt | grep '(base 16)' | cut -f3 > mac.man
+fi
+
+if [ -n "$_fMACaddr" ]; then
+  cat $_pathData/oui.txt | grep '(base 16)' | cut -f1 -d' ' > mac.addr
+fi
+
+if [ -n "$_fMACpfx" ]; then
+  paste mac.addr mac.man | sort > $_pathData/nmap-mac-prefixes
+fi
+
+if [ -n "$_fIABaddr" ]; then
+  cat $_pathData/iab.txt | grep '(' | egrep 'hex|base' | paste -d"\t" - - | sed 's/ \+/ /g' | cut -f1 -d' ' | sed 's/-//g' > iab.addr.1
+  cat $_pathData/iab.txt | grep '(' | egrep 'hex|base' | paste -d"\t" - - | sed 's/ \+/ /g' | cut -f2 | cut -c 1-3 > iab.addr.2
+  cat $_pathData/iab.txt | grep '(' | egrep 'hex|base' | paste -d"\t" - - | sed 's/ \+/ /g' | cut -f2 | cut -c25- > iab.man
+
+  paste -d '' iab.addr.1 iab.addr.2 > iab.addr
+  paste iab.addr iab.man | sort > $_pathData/iab-arp-scan
+fi
+
+if [ -n "$_fMACcase" ]; then
+  cat mac.addr | perl -pe 's/^(([^0].)|0(.))(([^0].)|0(.))(([^0].)|0(.))/\2\3:\5\6:\8\9/' > mac.addr.u
+  cat mac.addr.u | tr [A-Z] [a-z] > mac.addr.l
+fi
+
+if [ -n "$_fMAChyp" ]; then
+  cat mac.addr | perl -pe 's/^(([^0].)|0(.))(([^0].)|0(.))(([^0].)|0(.))/\2\3-\5\6-\8\9/' > mac.addr.h
+fi
+
+if [ -d $_path1 ]; then
+  # arp-scan
+  rm -f $_path1/ieee-{oui,iab}.txt
+  ln -sf $_pathData/nmap-mac-prefixes $_path1/ieee-oui.txt
+  ln -sf $_pathData/iab-arp-scan $_path1/ieee-iab.txt
+fi
+
+if [ -d $_path2 ]; then
+  # golismero
+  rm -f $_path2/thirdparty_libs/netaddr/eui/oui.txt
+  rm -f $_path2/thirdparty_libs/netaddr/eui/iab.txt
+  ln -sf $_pathData/oui.txt $_path2/thirdparty_libs/netaddr/eui/oui.txt
+  ln -sf $_pathData/iab.txt $_path2/thirdparty_libs/netaddr/eui/iab.txt
+fi
+
+if [ -d $_path3 ]; then
+  # nmap
+  rm -f $_path3/nmap-mac-prefixes
+  ln -sf $_pathData/nmap-mac-prefixes $_path3/nmap-mac-prefixes
+fi
+
+if [ -d $_path4 ]; then
+  # btscanner
+  rm -f $_path4/oui.txt
+  ln -sf $_pathData/nmap-mac-prefixes $_path4/oui.txt
+fi
+
+if [ -d $_path5 ]; then
+  # arpwatch
+  paste mac.addr.l mac.man | sort > $_pathData/ethercodes.dat
+  rm -f $_path5/ethercodes.dat
+  ln -sf $_pathData/ethercodes.dat $_path5/ethercodes.dat
+fi
+
+if [ -d $_path6 ]; then
+  # arpalert
+  rm -f $_path6/oui.txt
+  ln -sf $_pathData/oui.txt $_path6/oui.txt
+fi
+
+if [ -d $_path7 ]; then
+  # bluelog
+  paste -d ',' mac.addr.u mac.man | sort > $_pathData/bluelog.dat
+  rm -f $_path7/oui.txt
+  ln -sf $_pathData/bluelog.dat $_path7/oui.txt
+fi
+
+if [ -d $_path8 ]; then
+  # unicorn
+  paste -d ':' mac.addr.h mac.man | sort > $_pathData/unicorn.dat
+  rm -f $_path8/oui.txt
+  ln -sf $_pathData/unicorn.dat $_path8/oui.txt
+fi
+
+rm -f mac.* iab.*
+
+
+# EOF /usr/sbin/update-oui

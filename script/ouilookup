@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+#
+
+if [ -z "$1" ]; then
+  echo; echo "Usage: $0 xx[:-]xx[:-]xx[:-xx[:-xx]...]"; echo
+  exit 10
+fi
+
+item="${1//:/}"
+item="${item//-/}"
+item="${item:0:6}"
+item=$(grep -i "^$item" /usr/share/ieee-data/oui.txt)
+echo "${item/ *}  ${item/*\)		}"
+
+# EOF /usr/bin/ouilookup

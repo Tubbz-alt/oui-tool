@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+
+#export DIR_IEEEDATA=/usr/share/ieee-data
+
+#export DIR_DB_ARPSCAN=/usr/share/arp-scan
+#export DIR_DB_GOLISMERO=/usr/share/golismero
+#export DIR_DB_NMAP=/usr/share/nmap
+#export DIR_DB_BTSCANNER=/usr/share/btscanner
+#export DIR_DB_ARPWATCH=/usr/share/arpwatch
+#export DIR_DB_ARPALERT=/etc/arpalert
+#export DIR_DB_BLUELOG=/usr/share/bluelog
+#export DIR_DB_UNICORN=/etc/unicornscan
+
+update-oui
+
+# EOF /etc/cron.weekly/update-oui.cron
