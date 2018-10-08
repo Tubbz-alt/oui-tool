@@ -45,14 +45,14 @@ fi
 
 cd $_pathTmp
 
-wget -O oui.txt.tmp http://standards-oui.ieee.org/oui.txt
+wget -q -O oui.txt.tmp http://standards-oui.ieee.org/oui.txt
 if [ ! -s oui.txt.tmp ]; then
   echo "Unable to download OUI data from ieee.org, exiting"
   exit 1
 fi
 mv -f oui.txt.tmp $_pathData/oui.txt
 
-wget -O iab.txt.tmp http://standards-oui.ieee.org/iab/iab.txt
+wget -q -O iab.txt.tmp http://standards-oui.ieee.org/iab/iab.txt
 if [ ! -s iab.txt.tmp ]; then
   echo "Unable to download IAB data from ieee.org, exiting"
   exit 1
