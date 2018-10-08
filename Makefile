@@ -19,11 +19,12 @@ all build test:
 install: install-dir install-bin install-conf
 
 install-dir:
+	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/bin
+	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/sbin
 	$(INSTALL_DIR) $(DESTDIR)$(SYSCONF)/cron.weekly/
-	$(INSTALL_DIR) $(DESTDIR)/share/ieee-data/
+	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/share/ieee-data/
 
 install-bin:
-	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/bin
 	$(INSTALL_PROGRAM) script/update-oui $(DESTDIR)$(PREFIX)/sbin/
 	$(INSTALL_PROGRAM) script/ouilookup $(DESTDIR)$(PREFIX)/bin/
 	ln -sf $(DESTDIR)$(PREFIX)/bin/ouilookup $(DESTDIR)$(PREFIX)/bin/oui
@@ -42,7 +43,7 @@ uninstall-conf:
 	rm -f $(DESTDIR)$(SYSCONF)/cron.weekly/update-oui.cron
 
 uninstall-data:
-	rm -rf $(DESTDIR)/share/ieee-data
+	rm -rf $(DESTDIR)$(PREFIX)/share/ieee-data
 
 
 .PHONY: install-dir install-bin install-data uninstall-bin uninstall-data
