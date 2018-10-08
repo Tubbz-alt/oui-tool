@@ -30,7 +30,7 @@ install-bin:
 	ln -sf $(DESTDIR)$(PREFIX)/bin/ouilookup $(DESTDIR)$(PREFIX)/bin/oui
 
 install-conf:
-	$(INSTALL_PROGRAM) script/update-oui.cron $(DESTDIR)$(SYSCONF)/cron.weekly/
+	$(INSTALL_PROGRAM) conf/update-oui.cron $(DESTDIR)$(SYSCONF)/cron.weekly/
 
 uninstall: uninstall-bin uninstall-data uninstall-conf
 
