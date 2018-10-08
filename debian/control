@@ -4,9 +4,9 @@ Priority: optional
 Maintainer: Vitaly Protsko (SFT-Service) <villy@sft.ru>
 Standards-Version: 3.9.7
 Build-Depends: debhelper (>= 7)
-Vcs-Browser: http://oss.sft.ru:1080/dcc/dcc-cyrus/
-Vcs-Git: http://oss.sft.ru:1080/dcc/dcc-cyrus.git
-Homepage: http://oss.sft.ru:1080/dcc/dcc-cyrus/
+Vcs-Browser: http://oss.sft.ru:1080/dcc/oui-tool/
+Vcs-Git: http://oss.sft.ru:1080/dcc/oui-tool.git
+Homepage: http://oss.sft.ru:1080/dcc/oui-tool/
 
 Package: oui-tool
 Architecture: all

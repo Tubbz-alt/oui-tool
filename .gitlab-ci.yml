@@ -13,7 +13,7 @@ run-build:
     - $CI_PROJECT_DIR/update.debian
     - debuild binary-indep
     - mkdir build
-    - mv ../dcc-cyrus_*.deb build/
+    - mv ../oui-tool_*.deb build/
 
   artifacts:
     paths:
