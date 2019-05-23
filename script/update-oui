@@ -1,5 +1,14 @@
 #!/bin/bash
 #
+# update-oui
+#   update MAC addresses prefixes database from
+#   official IEEE site for set of tools:
+#     arp-scan, golismero, nmap, btscanner,
+#     arpwatch, arpalert, bluelog, unicorn
+#
+# (c) 2018-2019 Vitaly Protsko <villy@sft.ru>
+# Licensed under GPLv3
+#
 
 _pathData=${DIR_IEEEDATA:-/usr/share/ieee-data}
 
@@ -14,7 +23,13 @@ _path8=${DIR_DB_UNICORN:-/etc/unicornscan}
 
 _pathTmp=/var/tmp
 if [ ! -d $_pathTmp ]; then
-  _pathTmp=${TMPDIR}
+  if [ -n "${TMPDIR}" ] ; then
+    _pathTmp=${TMPDIR}
+  elif [ -n "${TMP}" ] ; then
+    _pathTmp=${TMP}
+  else
+    _pathTmp=/tmp
+  fi
 fi
 
 if [ -d $_path1 ] ; then
@@ -43,21 +58,23 @@ if [ ! -d $_pathData ]; then
   mkdir $_pathData
 fi
 
-cd $_pathTmp
+_dirTmp=$(mktemp -d -p $_pathTmp)
+cd $_dirTmp
+_fileTmp=$(mktemp -p $_dirTmp)
 
-wget -q -O oui.txt.tmp http://standards-oui.ieee.org/oui.txt
-if [ ! -s oui.txt.tmp ]; then
+wget -q -O $_fileTmp http://standards-oui.ieee.org/oui.txt
+if [ ! -s $_fileTmp ]; then
   echo "Unable to download OUI data from ieee.org, exiting"
   exit 1
 fi
-mv -f oui.txt.tmp $_pathData/oui.txt
+mv -f $_fileTmp $_pathData/oui.txt
 
-wget -q -O iab.txt.tmp http://standards-oui.ieee.org/iab/iab.txt
-if [ ! -s iab.txt.tmp ]; then
+wget -q -O $_fileTmp http://standards-oui.ieee.org/iab/iab.txt
+if [ ! -s $_fileTmp ]; then
   echo "Unable to download IAB data from ieee.org, exiting"
   exit 1
 fi
-mv -f iab.txt.tmp $_pathData/iab.txt
+mv -f $_fileTmp $_pathData/iab.txt
 
 if [ -n "$_fMACman" ]; then
   cat $_pathData/oui.txt | grep '(base 16)' | cut -f3 > mac.man

@@ -1,5 +1,8 @@
 #!/bin/bash
 #
+# ouilookup - search for MAC address in IEEE database
+# (c) 2018-2019 Vitaly Protsko <villy@sft.ru>
+# Licensed under GPLv3
 #
 
 if [ -z "$1" ]; then
