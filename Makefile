@@ -34,8 +34,9 @@ install-bin:
 	ln -sf $(DESTDIR)$(PREFIX)/bin/ouilookup $(DESTDIR)$(PREFIX)/bin/oui
 
 install-conf:
-	$(INSTALL_FILE) conf/update-oui $(DESTDIR)$(SYSCONF)/
+	$(INSTALL_FILE) LICENSE $(DESTDIR)$(DOCDIR)/
 	$(INSTALL_FILE) conf/update-oui.cron $(DESTDIR)$(DOCDIR)/
+	$(INSTALL_FILE) conf/update-oui $(DESTDIR)$(SYSCONF)/
 	$(INSTALL_FILE) conf/update-oui.service $(DESTDIR)$(SYSTEMD)/
 	$(INSTALL_FILE) conf/update-oui.timer $(DESTDIR)$(SYSTEMD)/
 
