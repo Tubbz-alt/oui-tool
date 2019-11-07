@@ -56,6 +56,7 @@ fi
 
 if [ ! -d $_pathData ]; then
   mkdir $_pathData
+  chmod 0755 $_pathData
 fi
 
 _dirTmp=$(mktemp -d -p $_pathTmp)
@@ -68,6 +69,7 @@ if [ ! -s $_fileTmp ]; then
   exit 1
 fi
 mv -f $_fileTmp $_pathData/oui.txt
+chmod 0644 $_pathData/oui.txt
 
 wget -q -O $_fileTmp http://standards-oui.ieee.org/iab/iab.txt
 if [ ! -s $_fileTmp ]; then
@@ -75,6 +77,7 @@ if [ ! -s $_fileTmp ]; then
   exit 1
 fi
 mv -f $_fileTmp $_pathData/iab.txt
+chmod 0644 $_pathData/iab.txt
 
 if [ -n "$_fMACman" ]; then
   cat $_pathData/oui.txt | grep '(base 16)' | cut -f3 > mac.man
@@ -86,6 +89,7 @@ fi
 
 if [ -n "$_fMACpfx" ]; then
   paste mac.addr mac.man | sort > $_pathData/nmap-mac-prefixes
+  chmod 0644 $_pathData/nmap-mac-prefixes
 fi
 
 if [ -n "$_fIABaddr" ]; then
@@ -95,6 +99,7 @@ if [ -n "$_fIABaddr" ]; then
 
   paste -d '' iab.addr.1 iab.addr.2 > iab.addr
   paste iab.addr iab.man | sort > $_pathData/iab-arp-scan
+  chmod 0644 $_pathData/iab-arp-scan
 fi
 
 if [ -n "$_fMACcase" ]; then
@@ -136,6 +141,7 @@ fi
 if [ -d $_path5 ]; then
   # arpwatch
   paste mac.addr.l mac.man | sort > $_pathData/ethercodes.dat
+  chmod 0644 $_pathData/ethercodes.dat
   rm -f $_path5/ethercodes.dat
   ln -sf $_pathData/ethercodes.dat $_path5/ethercodes.dat
 fi
@@ -149,6 +155,7 @@ fi
 if [ -d $_path7 ]; then
   # bluelog
   paste -d ',' mac.addr.u mac.man | sort > $_pathData/bluelog.dat
+  chmod 0644 $_pathData/bluelog.dat
   rm -f $_path7/oui.txt
   ln -sf $_pathData/bluelog.dat $_path7/oui.txt
 fi
@@ -156,6 +163,7 @@ fi
 if [ -d $_path8 ]; then
   # unicorn
   paste -d ':' mac.addr.h mac.man | sort > $_pathData/unicorn.dat
+  chmod 0644 $_pathData/unicorn.dat
   rm -f $_path8/oui.txt
   ln -sf $_pathData/unicorn.dat $_path8/oui.txt
 fi
