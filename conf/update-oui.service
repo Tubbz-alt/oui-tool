@@ -1,0 +1,13 @@
+[Unit]
+Description=IEEE OUI database updater tool
+After=network-online.target
+Documentation=https://github.com/aTanW/oui-tool
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/etc/default/update-oui
+ExecStart=/usr/sbin/update-oui
+
+StandardOutput=journal
+StandardError=journal
+

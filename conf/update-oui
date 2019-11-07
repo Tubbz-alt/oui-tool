@@ -1,0 +1,15 @@
+#
+# database paths for update by update-oui
+#
+
+#DIR_IEEEDATA=/usr/share/ieee-data
+#DIR_DB_ARPSCAN=/usr/share/arp-scan
+#DIR_DB_GOLISMERO=/usr/share/golismero
+#DIR_DB_NMAP=/usr/share/nmap
+#DIR_DB_BTSCANNER=/usr/share/btscanner
+#DIR_DB_ARPWATCH=/usr/share/arpwatch
+#DIR_DB_ARPALERT=/etc/arpalert
+#DIR_DB_BLUELOG=/usr/share/bluelog
+#DIR_DB_UNICORN=/etc/unicornscan
+
+# EOF /etc/default/update-oui

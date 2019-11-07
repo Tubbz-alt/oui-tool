@@ -2,15 +2,15 @@
 #
 #
 
-PREFIX ?= /usr
-# LIBEXEC ?= /var/lib
-SYSCONF ?= /etc
+PREFIX  ?= /usr
+SYSCONF ?= /etc/default
+SYSTEMD  = /lib/systemd/system
+DOCDIR  ?= $(PREFIX)/share/doc/oui-tool
+
 INSTALL ?= install
 
-#INSTALL_FILE	= $(INSTALL) -p    -o root -g root -m 640
-INSTALL_DATA	= $(INSTALL) -p    -o root -g root -m 644
+INSTALL_FILE	= $(INSTALL) -p    -o root -g root -m 640
 INSTALL_PROGRAM	= $(INSTALL) -p    -o root -g root -m 755
-INSTALL_SCRIPT	= $(INSTALL) -p    -o root -g root -m 755
 INSTALL_DIR	= $(INSTALL) -p -d -o root -g root -m 755
 
 all build test:
@@ -21,7 +21,9 @@ install: install-dir install-bin install-conf
 install-dir:
 	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/bin
 	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/sbin
-	$(INSTALL_DIR) $(DESTDIR)$(SYSCONF)/cron.weekly/
+	$(INSTALL_DIR) $(DESTDIR)$(SYSCONF)/
+	$(INSTALL_DIR) $(DESTDIR)$(SYSTEMD)/
+	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)/
 	$(INSTALL_DIR) $(DESTDIR)$(PREFIX)/share/ieee-data/
 
 install-bin:
@@ -30,7 +32,10 @@ install-bin:
 	ln -sf $(DESTDIR)$(PREFIX)/bin/ouilookup $(DESTDIR)$(PREFIX)/bin/oui
 
 install-conf:
-	$(INSTALL_PROGRAM) conf/update-oui.cron $(DESTDIR)$(SYSCONF)/cron.weekly/
+	$(INSTALL_FILE) conf/update-oui $(DESTDIR)$(SYSCONF)/
+	$(INSTALL_FILE) conf/update-oui.cron $(DESTDIR)$(DOCDIR)/
+	$(INSTALL_FILE) conf/update-oui.service $(DESTDIR)$(SYSTEMD)/
+	$(INSTALL_FILE) conf/update-oui.timer $(DESTDIR)$(SYSTEMD)/
 
 uninstall: uninstall-bin uninstall-data uninstall-conf
 
@@ -40,13 +45,12 @@ uninstall-bin:
 	rm $(DESTDIR)$(PREFIX)/bin/oui
 
 uninstall-conf:
-	rm -f $(DESTDIR)$(SYSCONF)/cron.weekly/update-oui.cron
+	rm -rf $(DESTDIR)$(DOCDIR)
+	rm -f $(DESTDIR)$(SYSTEMD)/update-oui.{service,timer}
+	rm -f $(DESTDIR)$(SYSCONF)/update-oui
 
-uninstall-data:
-	rm -rf $(DESTDIR)$(PREFIX)/share/ieee-data
 
-
-.PHONY: install-dir install-bin install-data uninstall-bin uninstall-data
+.PHONY: install-dir install-bin install-conf uninstall-bin uninstall-conf
 
 
 # EOF oui-tool/Makefile
