@@ -1,6 +1,8 @@
 # -* makefile *-
 #
-#
+# oui-tool - update and search IEEE OUI/IAB databases
+# (c) 2018-2019 Vitaly Protsko <villy@sft.ru>
+# Licensed under GPLv3
 
 PREFIX  ?= /usr
 SYSCONF ?= /etc/default
