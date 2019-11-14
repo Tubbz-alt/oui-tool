@@ -138,10 +138,10 @@ fi
 
 if [ -d $_path5 ]; then
   # arpwatch
-  paste mac.addr.l mac.man | sort > $_pathData/ethercodes.dat
-  chmod 0644 $_pathData/ethercodes.dat
-  rm -f $_path5/ethercodes.dat
-  ln -sf $_pathData/ethercodes.dat $_path5/ethercodes.dat
+  paste mac.addr.l mac.man | sort > $_pathData/ethercodes.db
+  chmod 0644 $_pathData/ethercodes.db
+  rm -f $_path5/ethercodes.db
+  ln -sf $_pathData/ethercodes.db $_path5/ethercodes.db
 fi
 
 if [ -d $_path6 ]; then
